@@ -4,8 +4,8 @@ import re
 import inspect
 
 
-def concrete_requirements():
-    with open('requirements.txt', 'r') as f:
+def concrete_requirements(source='requirements.txt'):
+    with open(source, 'r') as f:
         return [
             match.group(1) for match in
             [re.search('^(?!-)([\w\.=-]+)', req) for req in f]
@@ -25,6 +25,8 @@ def _read(*names, **kwargs):
 
 
 def find_version(*file_paths):
+    # Explicitly global references are required for pip-tools,
+    # which requires distutils run_setup parsing.
     global read, re
     version_file = _read(*file_paths)
     version_match = re.search(r"^__version__ = ['\']([^'\']*)['\']",
